@@ -114,7 +114,7 @@ NETWORK="$GITHUB_REPO/network"
 VAGRANT_DIR="$GITHUB_REPO/vagrant"
 NOT_SUPPORTED_FOLDER="$GITHUB_REPO/not-supported"
 GEOBLOCKDAT="$GITHUB_REPO/geoblockdat"
-NCREPO="https://ncdownload.octopuce.fr/server/releases"
+NCREPO="https://download.nextcloud.com/server/releases"
 ISSUES="https://github.com/nextcloud/vm/issues"
 # User information
 GUIUSER=ncadmin
@@ -1299,22 +1299,15 @@ download_verify_nextcloud_stable() {
 while [ -z "$NCVERSION" ]
 do
     print_text_in_color "$ICyan" "Fetching the latest Nextcloud version..."
-    NCVERSION=$(curl -s -m 900 $NCREPO/ | sed --silent 's/.*href="nextcloud-\([^"]\+\).zip.asc".*/\1/p' | sort --version-sort | tail -1)
+    NCVERSION="24.0.0"
     STABLEVERSION="nextcloud-$NCVERSION"
     print_text_in_color "$IGreen" "$NCVERSION"
 done
 
 # Download the file
-rm -f "$HTML/$STABLEVERSION.tar.bz2"
 cd $HTML
 print_text_in_color "$ICyan" "Downloading $STABLEVERSION..."
-if network_ok
-then
-    curl -fSLO --retry 3 "$NCREPO"/"$STABLEVERSION".tar.bz2
-else
-    msg_box "There seems to be an issue with your network, please try again later.\nThis script will now exit."
-    exit 1
-fi
+
 # Checksum of the downloaded file
 print_text_in_color "$ICyan" "Checking SHA256 checksum..."
 mkdir -p "$SHA256_DIR"

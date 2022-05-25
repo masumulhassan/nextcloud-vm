@@ -1305,9 +1305,16 @@ do
 done
 
 # Download the file
+rm -f "$HTML/$STABLEVERSION.tar.bz2"
 cd $HTML
 print_text_in_color "$ICyan" "Downloading $STABLEVERSION..."
-
+if network_ok
+then
+    curl -fSLO --retry 3 "$NCREPO"/"$STABLEVERSION".tar.bz2
+else
+    msg_box "There seems to be an issue with your network, please try again later.\nThis script will now exit."
+    exit 1
+fi
 # Checksum of the downloaded file
 print_text_in_color "$ICyan" "Checking SHA256 checksum..."
 mkdir -p "$SHA256_DIR"
